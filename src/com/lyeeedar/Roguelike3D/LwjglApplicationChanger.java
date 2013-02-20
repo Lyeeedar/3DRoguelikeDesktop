@@ -15,6 +15,7 @@ import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 import com.badlogic.gdx.backends.lwjgl.LwjglPreferences;
 import com.lyeeedar.Roguelike3D.Game.GameData;
 import com.lyeeedar.Roguelike3D.Graphics.ApplicationChanger;
+import com.lyeeedar.Roguelike3D.Graphics.Lights.LightManager;
 import com.lyeeedar.Roguelike3D.Graphics.Lights.LightManager.LightQuality;
 
 public class LwjglApplicationChanger extends ApplicationChanger {
@@ -33,7 +34,6 @@ public class LwjglApplicationChanger extends ApplicationChanger {
 		cfg.height = pref.getInteger("resolutionY");
 		cfg.fullscreen = pref.getBoolean("fullscreen");
 		cfg.vSyncEnabled = pref.getBoolean("vSync");
-		cfg.useCPUSynch = cfg.vSyncEnabled;
 		cfg.resizable = false;
 		cfg.useGL20 = true;
 		cfg.samples = pref.getInteger("MSAA-samples");
@@ -41,11 +41,8 @@ public class LwjglApplicationChanger extends ApplicationChanger {
 		GameData.resolution[0] = cfg.width;
 		GameData.resolution[1] = cfg.height;
 		
-		String lq = prefs.getString("light-quality");
-		
-		if (lq.equalsIgnoreCase("low")) GameData.lightQuality = LightQuality.VERTEX;
-		else if (lq.equalsIgnoreCase("high")) GameData.lightQuality = LightQuality.NORMALMAP;
-		
+		GameData.lightQuality = LightManager.getLightQuality(prefs.getString("Renderer"));
+
 		return new LwjglApplication(game, cfg);
 	}
 
@@ -61,14 +58,7 @@ public class LwjglApplicationChanger extends ApplicationChanger {
 		Gdx.graphics.setDisplayMode(width, height, fullscreen);
 		Gdx.graphics.setVSync(pref.getBoolean("vSync"));
 		
-		String lq = prefs.getString("light-quality");
-		
-		if (lq.equalsIgnoreCase("low")) GameData.lightQuality = LightQuality.VERTEX;
-		else if (lq.equalsIgnoreCase("high")) GameData.lightQuality = LightQuality.NORMALMAP;
-		
-		GameData.LightsPerModel = prefs.getInteger("lights-per-model");
-		
-		GameData.updateLights = true;
+		GameData.lightQuality = LightManager.getLightQuality(prefs.getString("Renderer"));
 	}
 
 	@Override
