@@ -51,10 +51,10 @@ public class LwjglApplicationChanger extends ApplicationChanger {
 		int width = pref.getInteger("resolutionX");
 		int height = pref.getInteger("resolutionY");
 		boolean fullscreen = pref.getBoolean("fullscreen");
-		
+
 		GameData.resolution[0] = width;
 		GameData.resolution[1] = height;
-		
+
 		Gdx.graphics.setDisplayMode(width, height, fullscreen);
 		Gdx.graphics.setVSync(pref.getBoolean("vSync"));
 		
@@ -105,6 +105,16 @@ public class LwjglApplicationChanger extends ApplicationChanger {
 		String[] m = new String[modes.size()];
 		
 		return modes.toArray(m);
+	}
+
+	@Override
+	public void setToNativeResolution(Preferences prefs) {
+		DisplayMode dm = Gdx.graphics.getDesktopDisplayMode();
+		
+		prefs.putInteger("resolutionX", dm.width);
+		prefs.putInteger("resolutionY", dm.height);
+		
+		updateApplication(prefs);
 	}
 
 }
